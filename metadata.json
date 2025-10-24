@@ -1,0 +1,5 @@
+{
+  "name": "AI Wrapped",
+  "description": "A web application similar to Spotify Wrapped that generates fun, personalized analytics and visualizations about a user's conversation history with AI chatbots like Claude and ChatGPT. All data is processed client-side for privacy.",
+  "requestFramePermissions": []
+}
