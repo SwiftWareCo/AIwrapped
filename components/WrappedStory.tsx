@@ -1,134 +1,105 @@
 import React, { useState, useEffect } from 'react';
-import { AnalyticsResult } from '../types';
+import { AnalyticsResult, StoryStep } from '../types';
 import StatCard from './StatCard';
 import BarChartViz from './BarChartViz';
-import {
-  BarChart,
-  Users,
-  Clock,
-  Calendar,
-  Zap,
-  Award,
-  MessageSquare
-} from 'lucide-react';
-// FIX: Add LucideProps import for type definitions.
-import type { LucideProps } from 'lucide-react';
+import PersonaCard from './PersonaCard';
+import { generateStory } from '../services/storyService';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface WrappedStoryProps {
   analytics: AnalyticsResult;
   onReset: () => void;
 }
 
-// FIX: Define props for each step type to create a discriminated union.
-interface StatCardStepProps {
-  component: 'StatCard';
-  title: string;
-  value: string | number;
-  description: string;
-  icon: React.ComponentType<LucideProps>;
-}
-
-interface BarChartVizStepProps {
-  component: 'BarChartViz';
-  title: string;
-  data: any[];
-  dataKey: string;
-  xAxisKey: string;
-  description: string;
-  icon: React.ComponentType<LucideProps>;
-}
-
-type StoryStep = StatCardStepProps | BarChartVizStepProps;
-
 const WrappedStory: React.FC<WrappedStoryProps> = ({ analytics, onReset }) => {
   const [step, setStep] = useState(0);
+  const [storySteps, setStorySteps] = useState<StoryStep[] | null>(null);
+  const [isGeneratingStory, setIsGeneratingStory] = useState(true);
+  const [storyError, setStoryError] = useState<string | null>(null);
 
-  // FIX: Apply the StoryStep[] type to the storySteps array.
-  const storySteps: StoryStep[] = [
-    {
-      component: 'StatCard',
-      title: 'Your Year in Review',
-      value: analytics.platform,
-      description: `You had ${analytics.totalConversations} conversations spanning from ${analytics.firstChatDate.toLocaleDateString()} to ${analytics.lastChatDate.toLocaleDateString()}.`,
-      icon: Users
-    },
-    {
-      component: 'StatCard',
-      title: 'Message Volume',
-      value: analytics.totalMessages.toLocaleString(),
-      description: `messages exchanged in total. You sent ${analytics.userMessageCount.toLocaleString()} and the AI sent ${analytics.assistantMessageCount.toLocaleString()}.`,
-      icon: MessageSquare
-    },
-    {
-      component: 'StatCard',
-      title: 'Longest Streak',
-      value: `${analytics.longestStreak} days`,
-      description: `Was your longest stretch of consecutive daily chats. Talk about commitment!`,
-      icon: Zap
-    },
-    {
-        component: 'StatCard',
-        title: 'Your Persona',
-        value: analytics.userPersona.title,
-        description: analytics.userPersona.description,
-        icon: Award
-    },
-    {
-      component: 'BarChartViz',
-      title: 'Busiest Day of the Week',
-      data: analytics.dailyActivity,
-      dataKey: 'count',
-      xAxisKey: 'day',
-      description: `Looks like ${analytics.busiestDay.day} was your go-to day for chatting.`,
-      icon: Calendar
-    },
-    {
-      component: 'BarChartViz',
-      title: 'Most Active Hour',
-      data: analytics.hourlyActivity,
-      dataKey: 'count',
-      xAxisKey: 'hour',
-      description: `You were most active around ${analytics.busiestHour.hour}. A true night owl or an early bird?`,
-      icon: Clock
-    },
-    {
-      component: 'BarChartViz',
-      title: 'Monthly Activity',
-      data: analytics.monthlyActivity,
-      dataKey: 'count',
-      xAxisKey: 'month',
-      description: "Here's a look at your chat activity throughout the year.",
-      icon: BarChart
-    },
-  ];
+  useEffect(() => {
+    const createStory = async () => {
+      try {
+        setIsGeneratingStory(true);
+        setStoryError(null);
+        const generatedSteps = await generateStory(analytics);
+        setStorySteps(generatedSteps);
+      } catch (e) {
+        console.error("Failed to generate story:", e);
+        if (e instanceof Error) {
+          setStoryError(`Could not generate your story. This can happen if the AI is unavailable or if there's an issue with your data. Error: ${e.message}`);
+        } else {
+          setStoryError("An unknown error occurred while crafting your story.");
+        }
+      } finally {
+        setIsGeneratingStory(false);
+      }
+    };
+    createStory();
+  }, [analytics]);
 
-  const totalSteps = storySteps.length;
+  const totalSteps = storySteps?.length ?? 0;
 
   const nextStep = () => setStep(prev => Math.min(prev + 1, totalSteps - 1));
   const prevStep = () => setStep(prev => Math.max(prev - 1, 0));
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') nextStep();
-      if (e.key === 'ArrowLeft') prevStep();
+      if (e.key === 'ArrowRight' && step < totalSteps - 1) nextStep();
+      if (e.key === 'ArrowLeft' && step > 0) prevStep();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [step, totalSteps]);
+
+  if (isGeneratingStory) {
+    return (
+      <div className="flex flex-col items-center justify-center text-center p-8 bg-gray-800 rounded-lg min-h-[500px]">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-pink-400"></div>
+        <p className="mt-4 text-lg font-semibold">Crafting your personalized story...</p>
+        <p className="text-gray-400">Our AI is adding a little flair!</p>
+      </div>
+    );
+  }
+
+  if (storyError) {
+    return (
+      <div className="text-center p-8 bg-red-900/20 border border-red-500 rounded-lg min-h-[500px]">
+        <h2 className="text-2xl font-bold text-red-400">Story Generation Failed</h2>
+        <p className="mt-2 text-red-300">{storyError}</p>
+        <button
+          onClick={onReset}
+          className="mt-6 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  if (!storySteps || storySteps.length === 0) {
+    return (
+      <div className="text-center p-8">No story to tell. <button onClick={onReset} className="text-purple-400 hover:underline">Try again?</button></div>
+    );
+  }
 
   const currentStepData = storySteps[step];
 
   const renderStep = () => {
-    // FIX: With proper typing, the switch statement will correctly narrow the type of currentStepData.
+    if (!currentStepData) return null;
     switch (currentStepData.component) {
       case 'StatCard': {
         const { component, ...props } = currentStepData;
-        return <StatCard {...props} />;
+        return <StatCard key={step} {...props} />;
       }
       case 'BarChartViz': {
         const { component, ...props } = currentStepData;
-        return <BarChartViz {...props} />;
+        return <BarChartViz key={step} {...props} />;
+      }
+      case 'PersonaCard': {
+        const { component, ...props } = currentStepData;
+        return <PersonaCard key={step} {...props} />;
       }
       default:
         return null;
@@ -138,21 +109,25 @@ const WrappedStory: React.FC<WrappedStoryProps> = ({ analytics, onReset }) => {
   return (
     <div className="relative w-full max-w-2xl mx-auto p-4 md:p-8 bg-gray-800/50 rounded-2xl border border-gray-700 backdrop-blur-sm min-h-[500px] flex flex-col justify-between">
       <div className="flex-grow flex items-center justify-center">
-        {renderStep()}
+        <AnimatePresence mode="wait">
+          {renderStep()}
+        </AnimatePresence>
       </div>
       
       <div className="mt-8">
         <div className="w-full bg-gray-700 rounded-full h-1.5">
-          <div
-            className="bg-purple-500 h-1.5 rounded-full transition-all duration-300"
-            style={{ width: `${((step + 1) / totalSteps) * 100}%` }}
-          ></div>
+          <motion.div
+            className="bg-purple-500 h-1.5 rounded-full"
+            initial={{ width: 0 }}
+            animate={{ width: `${((step + 1) / totalSteps) * 100}%` }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          ></motion.div>
         </div>
         <div className="flex justify-between items-center mt-4">
           <button
             onClick={prevStep}
             disabled={step === 0}
-            className="px-4 py-2 bg-gray-700 rounded-lg disabled:opacity-50 hover:bg-gray-600 transition-colors"
+            className="px-4 py-2 bg-gray-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600 transition-colors"
           >
             Prev
           </button>
