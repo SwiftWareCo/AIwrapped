@@ -12,6 +12,11 @@ interface BarChartVizProps {
   xAxisKey: string;
   description: string;
   icon: React.ComponentType<LucideProps>;
+  themeStyles?: {
+    bgGradient?: string;
+    animation?: string;
+    customClass?: string;
+  };
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -25,7 +30,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const BarChartViz: React.FC<BarChartVizProps> = ({ title, data, dataKey, xAxisKey, description, icon: Icon }) => {
+const BarChartViz: React.FC<BarChartVizProps> = ({ title, data, dataKey, xAxisKey, description, icon: Icon, themeStyles }) => {
   return (
     <motion.div
       key={title}
@@ -33,7 +38,7 @@ const BarChartViz: React.FC<BarChartVizProps> = ({ title, data, dataKey, xAxisKe
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className="text-center p-4 w-full h-full flex flex-col"
+      className={`text-center p-4 w-full h-full flex flex-col ${themeStyles?.animation || ''} ${themeStyles?.customClass || ''}`}
     >
       <div className="flex items-center justify-center gap-3 mb-4">
         <Icon className="w-6 h-6 text-purple-300" />

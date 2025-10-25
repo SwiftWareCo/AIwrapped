@@ -2,20 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/ai-wrapped-favicon.svg" />
+    <link rel="apple-touch-icon" href="/ai-wrapped-favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Wrapped</title>
+    <title>AI Wrapped - Your Year in Conversation</title>
 
     <!-- Social Media Meta Tags -->
-    <meta name="description" content="Get your AI Wrapped! A personalized story of your conversation history with ChatGPT or Claude, generated securely in your browser." />
-    <meta property="og:title" content="AI Wrapped" />
-    <meta property="og:description" content="Your year in conversation, visualized. See your AI chat stats in a fun, shareable story." />
-    <meta property="og:image" content="https://i.imgur.com/gJtA4hT.png" />
+    <meta name="description" content="Discover your unique AI personality! Get your AI Wrapped - a fun, personalized story of your conversation history with ChatGPT or Claude. See your chat stats, top topics, and personality reveal in an immersive experience." />
+    <meta property="og:title" content="AI Wrapped - Your Year in Conversation" />
+    <meta property="og:description" content="Discover your unique AI personality! Get your AI Wrapped - a fun, personalized story of your conversation history with ChatGPT or Claude. Immersive, shareable, and generated right in your browser." />
+    <meta property="og:image" content="/ai-wrapped-preview.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:url" content="https://ai-wrapped.example.com" />
+    <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="AI Wrapped" />
-    <meta name="twitter:description" content="Your year in conversation, visualized. See your AI chat stats in a fun, shareable story." />
-    <meta name="twitter:image" content="https://i.imgur.com/gJtA4hT.png" />
+    <meta name="twitter:title" content="AI Wrapped - Your Year in Conversation" />
+    <meta name="twitter:description" content="Discover your unique AI personality! Immersive stats, flashy visuals, and epic persona reveals." />
+    <meta name="twitter:image" content="/ai-wrapped-preview.png" />
+    <meta name="theme-color" content="#0A0A0A" />
 
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -44,6 +49,47 @@
       #root {
         position: relative;
         z-index: 1;
+      }
+
+      /* Custom Animation Keyframes for Story Steps */
+      @keyframes glow {
+        0%, 100% {
+          box-shadow: 0 0 20px rgba(168, 85, 247, 0.5), 0 0 40px rgba(168, 85, 247, 0.25);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(168, 85, 247, 0.8), 0 0 60px rgba(168, 85, 247, 0.4);
+        }
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: -1000px 0;
+        }
+        100% {
+          background-position: 1000px 0;
+        }
+      }
+
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      .animate-glow {
+        animation: glow 2s ease-in-out infinite;
+      }
+
+      .animate-shimmer {
+        background-size: 1000px 100%;
+        animation: shimmer 2s infinite;
+      }
+
+      .animate-float {
+        animation: float 3s ease-in-out infinite;
       }
     </style>
   <script type="importmap">

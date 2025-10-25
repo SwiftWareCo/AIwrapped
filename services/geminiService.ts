@@ -1,11 +1,45 @@
-import { GoogleGenAI, Type } from "@google/genai";
 import { AnalyticsResult, IMessage } from "../types";
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = process.env.GROQ_API_KEY;
 if (!API_KEY) {
-  throw new Error("API_KEY environment variable is not set.");
+  throw new Error("GROQ_API_KEY environment variable is not set.");
 }
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+
+const GROQ_API_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
+
+// Helper function to add randomization for unique persona generation
+const getRandomSeed = () => Math.random().toString(36).substring(7);
+const getTimestamp = () => new Date().toISOString();
+
+async function callGroqAPI(prompt: string, isJsonMode: boolean = false) {
+  const response = await fetch(GROQ_API_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "mixtral-8x7b-32768",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      temperature: 0.7,
+      max_tokens: 500,
+      response_format: isJsonMode ? { type: "json_object" } : undefined,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(`Groq API error: ${error.error?.message || "Unknown error"}`);
+  }
+
+  const data = await response.json();
+  return data.choices[0].message.content;
+}
 
 export interface TopicSummary {
   title: string;
@@ -25,9 +59,16 @@ export const generateTopicSummary = async (
       throw new Error("No user messages to analyze.");
     }
 
+    // Add randomization to ensure unique generation each time
+    const uniqueId = getRandomSeed();
+    const timestamp = getTimestamp();
+
     const prompt = `You are an AI analyzing chat history for a "Spotify Wrapped" style summary.
 Analyze the following user messages to identify a single, dominant, and interesting theme or topic.
 Based on the topic, create a short, fun, one-sentence insight.
+
+Generation ID: ${uniqueId} (Timestamp: ${timestamp}) - Please ensure this response is unique and creative.
+
 The user's messages are:
 ---
 ${sample}
@@ -39,27 +80,18 @@ Example Response:
   "insight": "You've got money on your mind, frequently exploring topics about investing, saving, and the economy!"
 }`;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            title: { type: Type.STRING },
-            insight: { type: Type.STRING },
-          },
-          required: ['title', 'insight'],
-        }
-      }
-    });
+    const response = await callGroqAPI(prompt, true);
+    const jsonText = response.trim();
 
-    const jsonText = response.text.trim();
-    return JSON.parse(jsonText);
+    // Parse the JSON response
+    const parsed = JSON.parse(jsonText);
+    return {
+      title: parsed.title || "Deep Thinker",
+      insight: parsed.insight || "You explored fascinating subjects in your conversations!"
+    };
 
   } catch (error) {
-    console.error("Gemini topic summary failed:", error);
+    console.error("Groq topic summary failed:", error);
     // Return a creative fallback on error
     return {
         title: "Deep Thinker",
@@ -75,26 +107,28 @@ export const generatePersonaDescription = async (
 ): Promise<string> => {
   try {
     const topWords = wordFrequency.slice(0, 10).map(w => w.text).join(', ');
-    
-    const prompt = `You are a witty and bombastic announcer for an "AI Wrapped" experience. Based on the following user persona and their most used words in AI chats, generate a fun, over-the-top, and flattering personality description. Keep it to 2-3 short, impactful sentences. Be creative and celebratory.
 
-    **User Persona:**
-    - Title: "${persona.title}"
-    - Base Description: "${persona.description}"
+    // Add randomization to ensure unique generation each time
+    const uniqueId = getRandomSeed();
+    const timestamp = getTimestamp();
 
-    **Their Top Words:**
-    - ${topWords}
+    const prompt = `You are a witty and bombastic announcer for an "AI Wrapped" experience. Based on the following user persona and their most used words in AI chats, generate a fun, over-the-top, and flattering personality description. Keep it to 2-3 short, impactful sentences. Be creative and celebratory. Make it UNIQUE and different from generic responses.
 
-    Now, reveal their grand, bombastic persona! Make it sound epic.`;
+Generation ID: ${uniqueId} (Timestamp: ${timestamp})
 
-    const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: prompt,
-    });
+**User Persona:**
+- Title: "${persona.title}"
+- Base Description: "${persona.description}"
 
-    return response.text;
+**Their Top Words:**
+- ${topWords}
+
+Now, reveal their grand, bombastic persona! Make it sound epic and totally unique to them.`;
+
+    const response = await callGroqAPI(prompt, false);
+    return response.trim();
   } catch (error) {
-    console.error("Gemini API call failed:", error);
+    console.error("Groq API call failed:", error);
     // Return a creative fallback description on error
     return `You're the **${persona.title}**! ${persona.description} Your conversations are truly one-of-a-kind, shaping the digital cosmos with every word.`;
   }

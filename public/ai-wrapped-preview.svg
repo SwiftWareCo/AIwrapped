@@ -1,0 +1,76 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1e1b4b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#mainGradient)" />
+
+  <!-- Accent shapes -->
+  <circle cx="150" cy="100" r="120" fill="#a855f7" opacity="0.15" />
+  <circle cx="1050" cy="530" r="150" fill="#ec4899" opacity="0.15" />
+  <rect x="0" y="0" width="1200" height="630" fill="none" stroke="url(#accentGradient)" stroke-width="2" opacity="0.3" />
+
+  <!-- Main Title -->
+  <text x="600" y="120" font-size="80" font-weight="900" text-anchor="middle" fill="#ffffff" font-family="Inter, sans-serif">
+    AI WRAPPED
+  </text>
+
+  <!-- Subtitle -->
+  <text x="600" y="190" font-size="32" text-anchor="middle" fill="#c084fc" font-family="Inter, sans-serif" font-weight="600">
+    Your Year in Conversation
+  </text>
+
+  <!-- Feature highlights -->
+  <g>
+    <!-- Left feature -->
+    <circle cx="250" cy="380" r="40" fill="url(#accentGradient)" opacity="0.2" filter="url(#glow)" />
+    <text x="250" y="385" font-size="24" text-anchor="middle" fill="#ec4899" font-family="Inter, sans-serif" font-weight="700">
+      📊
+    </text>
+    <text x="250" y="450" font-size="18" text-anchor="middle" fill="#e0e7ff" font-family="Inter, sans-serif">
+      Epic Stats
+    </text>
+
+    <!-- Center feature -->
+    <circle cx="600" cy="380" r="40" fill="url(#accentGradient)" opacity="0.2" filter="url(#glow)" />
+    <text x="600" y="385" font-size="24" text-anchor="middle" fill="#a855f7" font-family="Inter, sans-serif" font-weight="700">
+      ✨
+    </text>
+    <text x="600" y="450" font-size="18" text-anchor="middle" fill="#e0e7ff" font-family="Inter, sans-serif">
+      Unique Persona
+    </text>
+
+    <!-- Right feature -->
+    <circle cx="950" cy="380" r="40" fill="url(#accentGradient)" opacity="0.2" filter="url(#glow)" />
+    <text x="950" y="385" font-size="24" text-anchor="middle" fill="#ec4899" font-family="Inter, sans-serif" font-weight="700">
+      🎭
+    </text>
+    <text x="950" y="450" font-size="18" text-anchor="middle" fill="#e0e7ff" font-family="Inter, sans-serif">
+      Immersive Story
+    </text>
+  </g>
+
+  <!-- CTA Text -->
+  <text x="600" y="550" font-size="24" text-anchor="middle" fill="#d1d5db" font-family="Inter, sans-serif">
+    Discover your unique AI personality with dynamic animations
+  </text>
+
+  <!-- Bottom accent line -->
+  <line x1="300" y1="590" x2="900" y2="590" stroke="url(#accentGradient)" stroke-width="3" />
+</svg>

@@ -69,6 +69,20 @@ export interface ChatGPTConversation {
 }
 
 
+// --- Theme Configuration ---
+
+export interface ThemeConfig {
+  // Gradient background colors
+  bgFrom: string;
+  bgTo: string;
+  // Animation type
+  animation: 'pulse' | 'glow' | 'shimmer' | 'float' | 'none';
+  // Mood/tone of the step
+  mood: 'bright' | 'energetic' | 'calm' | 'dark' | 'epic';
+  // Custom CSS classes if needed
+  customClass?: string;
+}
+
 // --- Story Step Types ---
 
 export interface StatCardStepProps {
@@ -77,6 +91,7 @@ export interface StatCardStepProps {
   value: string | number;
   description: string;
   icon: React.ComponentType<LucideProps>;
+  theme?: ThemeConfig;
 }
 
 export interface BarChartVizStepProps {
@@ -87,6 +102,7 @@ export interface BarChartVizStepProps {
   xAxisKey: string;
   description: string;
   icon: React.ComponentType<LucideProps>;
+  theme?: ThemeConfig;
 }
 
 export interface PersonaCardStepProps {
@@ -95,6 +111,7 @@ export interface PersonaCardStepProps {
   personaTitle: string;
   icon: string;
   description: string;
+  theme?: ThemeConfig;
 }
 
 export type StoryStep = StatCardStepProps | BarChartVizStepProps | PersonaCardStepProps;

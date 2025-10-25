@@ -1,0 +1,47 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="glowGradient">
+      <stop offset="0%" style="stop-color:#ec4899;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Main background -->
+  <circle cx="100" cy="100" r="100" fill="url(#bgGradient)" />
+
+  <!-- Glow effect -->
+  <circle cx="100" cy="100" r="95" fill="url(#glowGradient)" opacity="0.6" />
+
+  <!-- AI symbol: stylized brain/circuit -->
+  <g transform="translate(100, 100)">
+    <!-- Central circle -->
+    <circle cx="0" cy="0" r="28" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.9" />
+
+    <!-- Inner nodes -->
+    <circle cx="-15" cy="-15" r="5" fill="#ffffff" opacity="0.8" />
+    <circle cx="15" cy="-15" r="5" fill="#ffffff" opacity="0.8" />
+    <circle cx="-15" cy="15" r="5" fill="#ffffff" opacity="0.8" />
+    <circle cx="15" cy="15" r="5" fill="#ffffff" opacity="0.8" />
+    <circle cx="0" cy="0" r="4" fill="#ec4899" opacity="0.9" />
+
+    <!-- Connection lines -->
+    <line x1="-15" y1="-15" x2="15" y2="-15" stroke="#ffffff" stroke-width="2" opacity="0.7" />
+    <line x1="-15" y1="-15" x2="-15" y2="15" stroke="#ffffff" stroke-width="2" opacity="0.7" />
+    <line x1="15" y1="-15" x2="15" y2="15" stroke="#ffffff" stroke-width="2" opacity="0.7" />
+    <line x1="-15" y1="15" x2="15" y2="15" stroke="#ffffff" stroke-width="2" opacity="0.7" />
+
+    <!-- Lines to center -->
+    <line x1="-15" y1="-15" x2="0" y2="0" stroke="#ec4899" stroke-width="1.5" opacity="0.6" />
+    <line x1="15" y1="-15" x2="0" y2="0" stroke="#ec4899" stroke-width="1.5" opacity="0.6" />
+    <line x1="-15" y1="15" x2="0" y2="0" stroke="#ec4899" stroke-width="1.5" opacity="0.6" />
+    <line x1="15" y1="15" x2="0" y2="0" stroke="#ec4899" stroke-width="1.5" opacity="0.6" />
+  </g>
+
+  <!-- Outer accent ring -->
+  <circle cx="100" cy="100" r="100" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.3" />
+</svg>

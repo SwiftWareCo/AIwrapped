@@ -26,6 +26,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
     value: analytics.platform,
     description: `You had ${analytics.totalConversations} conversations from ${formatDate(analytics.firstChatDate)} to ${formatDate(analytics.lastChatDate)}.`,
     icon: Users,
+    theme: {
+      bgFrom: 'from-pink-600',
+      bgTo: 'to-purple-600',
+      animation: 'glow',
+      mood: 'bright',
+      customClass: 'shadow-2xl shadow-pink-500/50',
+    },
   });
 
   // --- Step 2: Message Volume ---
@@ -35,6 +42,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
     value: analytics.totalMessages.toLocaleString(),
     description: `messages exchanged. You sent ${analytics.userMessageCount.toLocaleString()} and the AI sent ${analytics.assistantMessageCount.toLocaleString()}.`,
     icon: MessageSquare,
+    theme: {
+      bgFrom: 'from-blue-600',
+      bgTo: 'to-cyan-500',
+      animation: 'shimmer',
+      mood: 'energetic',
+      customClass: 'shadow-2xl shadow-blue-500/50',
+    },
   });
   
   // --- Conditional Steps ---
@@ -46,6 +60,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
       value: `${analytics.longestStreak} days`,
       description: `Was your longest stretch of consecutive daily chats. Talk about commitment!`,
       icon: Zap,
+      theme: {
+        bgFrom: 'from-orange-500',
+        bgTo: 'to-red-600',
+        animation: 'pulse',
+        mood: 'energetic',
+        customClass: 'shadow-2xl shadow-orange-500/50',
+      },
     });
   }
 
@@ -57,6 +78,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
         value: `${analytics.avgMessagesPerConvo} messages`,
         description: 'Was your average per conversation. You love to explore topics thoroughly!',
         icon: Repeat,
+        theme: {
+          bgFrom: 'from-teal-600',
+          bgTo: 'to-green-600',
+          animation: 'float',
+          mood: 'calm',
+          customClass: 'shadow-2xl shadow-teal-500/50',
+        },
       });
   }
   
@@ -69,6 +97,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
         value: topicSummary.title,
         description: topicSummary.insight,
         icon: Lightbulb,
+        theme: {
+          bgFrom: 'from-amber-500',
+          bgTo: 'to-yellow-400',
+          animation: 'glow',
+          mood: 'bright',
+          customClass: 'shadow-2xl shadow-yellow-500/50',
+        },
       });
   }
 
@@ -81,6 +116,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
     xAxisKey: 'day',
     description: `Looks like ${analytics.busiestDay.day} was your go-to day for chatting.`,
     icon: Calendar,
+    theme: {
+      bgFrom: 'from-indigo-600',
+      bgTo: 'to-purple-500',
+      animation: 'shimmer',
+      mood: 'calm',
+      customClass: 'shadow-2xl shadow-indigo-500/50',
+    },
   });
 
   steps.push({
@@ -91,6 +133,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
     xAxisKey: 'hour',
     description: `You were most active around ${analytics.busiestHour.hour}. A true night owl or an early bird?`,
     icon: Clock,
+    theme: {
+      bgFrom: 'from-violet-600',
+      bgTo: 'to-fuchsia-500',
+      animation: 'float',
+      mood: 'calm',
+      customClass: 'shadow-2xl shadow-violet-500/50',
+    },
   });
   
   // --- Step 6: Monthly Activity ---
@@ -103,6 +152,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
         xAxisKey: 'month',
         description: "Here's a look at your chat activity throughout the year.",
         icon: BarChart,
+        theme: {
+          bgFrom: 'from-emerald-600',
+          bgTo: 'to-cyan-600',
+          animation: 'shimmer',
+          mood: 'calm',
+          customClass: 'shadow-2xl shadow-emerald-500/50',
+        },
     });
   }
 
@@ -115,6 +171,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
       personaTitle: `${analytics.userPersona.icon} The ${analytics.userPersona.title} ${analytics.userPersona.icon}`,
       description: bombasticDescription,
       icon: analytics.userPersona.icon,
+      theme: {
+        bgFrom: 'from-slate-900',
+        bgTo: 'to-slate-800',
+        animation: 'pulse',
+        mood: 'epic',
+        customClass: 'shadow-2xl shadow-purple-600/50 border-2 border-purple-500',
+      },
   });
 
   return steps;

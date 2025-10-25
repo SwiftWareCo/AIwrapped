@@ -7,9 +7,14 @@ interface PersonaCardProps {
   personaTitle: string;
   description: string;
   icon: string;
+  themeStyles?: {
+    bgGradient?: string;
+    animation?: string;
+    customClass?: string;
+  };
 }
 
-const PersonaCard: React.FC<PersonaCardProps> = ({ title, personaTitle, description }) => {
+const PersonaCard: React.FC<PersonaCardProps> = ({ title, personaTitle, description, themeStyles }) => {
   return (
     <motion.div
       key={title}
@@ -17,7 +22,7 @@ const PersonaCard: React.FC<PersonaCardProps> = ({ title, personaTitle, descript
       animate={{ opacity: 1, scale: 1, rotate: 0 }}
       exit={{ opacity: 0, scale: 0.8, rotate: 5 }}
       transition={{ duration: 0.7, type: 'spring' }}
-      className="text-center p-6 flex flex-col items-center bg-gradient-to-br from-purple-900 via-gray-900 to-pink-900 rounded-2xl shadow-2xl border border-purple-500"
+      className={`text-center p-6 flex flex-col items-center bg-gradient-to-br from-purple-900 via-gray-900 to-pink-900 rounded-2xl shadow-2xl border border-purple-500 ${themeStyles?.animation || ''} ${themeStyles?.customClass || ''}`}
     >
       <div className="relative mb-6">
         <Sparkles className="absolute -top-4 -left-4 w-8 h-8 text-yellow-300 animate-pulse" />

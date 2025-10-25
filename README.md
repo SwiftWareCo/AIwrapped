@@ -1,20 +1,38 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🎭 AI Wrapped
 
-# Run and deploy your AI Studio app
+Discover your unique AI personality! **AI Wrapped** is an interactive web app that analyzes your conversation history with ChatGPT or Claude and generates a personalized, immersive story with dynamic animations, epic stats, and your unique persona.
 
-This contains everything you need to run your app locally.
+![AI Wrapped Preview](./public/ai-wrapped-preview.svg)
 
-View your app in AI Studio: https://ai.studio/apps/drive/1H0r-pYQEC3pGXrACvd9A7cI0P1gcJHal
+## Features
 
-## Run Locally
+✨ **Dynamic Persona Generation** - Every AI call generates a completely unique persona description using the Groq API. No two wraps are the same!
 
-**Prerequisites:**  Node.js
+📊 **Epic Analytics** - Beautiful visualizations of your chat statistics:
+  - Total messages exchanged
+  - Busiest day of the week
+  - Most active hour
+  - Monthly activity trends
+  - Your longest streak
+  - Deep dive insights
 
+🎨 **Immersive Story Experience** - Each story step has a unique:
+  - Dynamic gradient background (pink, purple, blue, teal, orange, etc.)
+  - Custom animations (glow, shimmer, float, pulse)
+  - Mood-based theming (bright, energetic, calm, epic, dark)
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+🔒 **Privacy First** - All processing happens in your browser. Your chat data never leaves your device.
+
+📱 **Share Anywhere** - Generate shareable links with encoded analytics. Perfect for Discord, Twitter, or any social platform with beautiful OG previews.
+
+## Privacy & Data
+
+All chat processing happens locally in your browser. The only data sent to Groq servers is the anonymized conversation summary for persona generation. Raw chat messages are never sent to any external service.
+
+## Contributing
+
+Have ideas? Found a bug? Feel free to open an issue or submit a PR!
+
+## License
+
+MIT

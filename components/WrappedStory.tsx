@@ -1,11 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { AnalyticsResult, StoryStep } from '../types';
+import { AnalyticsResult, StoryStep, ThemeConfig } from '../types';
 import StatCard from './StatCard';
 import BarChartViz from './BarChartViz';
 import PersonaCard from './PersonaCard';
 import { generateStory } from '../services/storyService';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Share2, Check } from 'lucide-react';
+
+// CSS Animations for different moods
+const getThemeStyles = (theme?: ThemeConfig) => {
+  if (!theme) return {};
+
+  const animationClasses = {
+    'pulse': 'animate-pulse',
+    'glow': 'animate-glow',
+    'shimmer': 'animate-shimmer',
+    'float': 'animate-float',
+    'none': '',
+  };
+
+  const bgGradient = `bg-gradient-to-br ${theme.bgFrom} ${theme.bgTo}`;
+  const animation = animationClasses[theme.animation] || '';
+
+  return {
+    bgGradient,
+    animation,
+    customClass: theme.customClass || '',
+  };
+};
 
 interface WrappedStoryProps {
   analytics: AnalyticsResult;
@@ -110,26 +132,40 @@ const WrappedStory: React.FC<WrappedStoryProps> = ({ analytics, onReset, isShare
 
   const renderStep = () => {
     if (!currentStepData) return null;
+    const themeStyles = getThemeStyles(currentStepData.theme);
+
     switch (currentStepData.component) {
       case 'StatCard': {
-        const { component, ...props } = currentStepData;
-        return <StatCard key={step} {...props} />;
+        const { component, theme, ...props } = currentStepData;
+        return <StatCard key={step} {...props} themeStyles={themeStyles} />;
       }
       case 'BarChartViz': {
-        const { component, ...props } = currentStepData;
-        return <BarChartViz key={step} {...props} />;
+        const { component, theme, ...props } = currentStepData;
+        return <BarChartViz key={step} {...props} themeStyles={themeStyles} />;
       }
       case 'PersonaCard': {
-        const { component, ...props } = currentStepData;
-        return <PersonaCard key={step} {...props} />;
+        const { component, theme, ...props } = currentStepData;
+        return <PersonaCard key={step} {...props} themeStyles={themeStyles} />;
       }
       default:
         return null;
     }
   };
 
+  const themeStyles = getThemeStyles(currentStepData?.theme);
+  const bgClass = themeStyles.bgGradient || 'bg-gradient-to-br from-gray-700 to-gray-900';
+  const animationClass = themeStyles.animation || '';
+  const customClass = themeStyles.customClass || '';
+
   return (
-    <div className="relative w-full max-w-2xl mx-auto p-4 md:p-8 bg-gray-800/50 rounded-2xl border border-gray-700 backdrop-blur-sm min-h-[500px] flex flex-col justify-between">
+    <motion.div
+      key={`step-${step}`}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.3 }}
+      className={`relative w-full max-w-2xl mx-auto p-4 md:p-8 ${bgClass} rounded-2xl border border-gray-600 backdrop-blur-sm min-h-[500px] flex flex-col justify-between transition-all duration-300 ${animationClass} ${customClass}`}
+    >
       <div className="flex-grow flex items-center justify-center">
         <AnimatePresence mode="wait">
           {renderStep()}
@@ -181,7 +217,7 @@ const WrappedStory: React.FC<WrappedStoryProps> = ({ analytics, onReset, isShare
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
