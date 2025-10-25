@@ -5,23 +5,29 @@ import BarChartViz from './BarChartViz';
 import PersonaCard from './PersonaCard';
 import { generateStory } from '../services/storyService';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Share2, Check } from 'lucide-react';
 
 interface WrappedStoryProps {
   analytics: AnalyticsResult;
   onReset: () => void;
+  isShareView: boolean;
 }
 
-const WrappedStory: React.FC<WrappedStoryProps> = ({ analytics, onReset }) => {
+const WrappedStory: React.FC<WrappedStoryProps> = ({ analytics, onReset, isShareView }) => {
   const [step, setStep] = useState(0);
   const [storySteps, setStorySteps] = useState<StoryStep[] | null>(null);
   const [isGeneratingStory, setIsGeneratingStory] = useState(true);
   const [storyError, setStoryError] = useState<string | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
     const createStory = async () => {
       try {
         setIsGeneratingStory(true);
         setStoryError(null);
+        // If it's a share view, we don't need to re-run the most expensive AI parts.
+        // For simplicity in this update, we'll re-run it, but this could be optimized
+        // by storing the AI-generated text in the shareable data.
         const generatedSteps = await generateStory(analytics);
         setStorySteps(generatedSteps);
       } catch (e) {
@@ -42,6 +48,22 @@ const WrappedStory: React.FC<WrappedStoryProps> = ({ analytics, onReset }) => {
 
   const nextStep = () => setStep(prev => Math.min(prev + 1, totalSteps - 1));
   const prevStep = () => setStep(prev => Math.max(prev - 1, 0));
+
+  const handleShare = () => {
+    const dataToShare = { ...analytics };
+    // Remove potentially large and sensitive userMessages array before sharing
+    // @ts-ignore
+    delete dataToShare.userMessages;
+
+    const jsonString = JSON.stringify(dataToShare);
+    const base64String = btoa(jsonString);
+    const url = `${window.location.origin}${window.location.pathname}?share=${base64String}`;
+    
+    navigator.clipboard.writeText(url).then(() => {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000); // Reset after 2 seconds
+    });
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -140,12 +162,22 @@ const WrappedStory: React.FC<WrappedStoryProps> = ({ analytics, onReset }) => {
                 Next
              </button>
           ) : (
-             <button
-                onClick={onReset}
-                className="px-4 py-2 bg-pink-600 rounded-lg hover:bg-pink-700 transition-colors"
-            >
-                Start Over
-            </button>
+             <div className="flex items-center gap-2">
+                {!isShareView && (
+                  <button
+                    onClick={handleShare}
+                    className="px-4 py-2 bg-teal-600 rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2"
+                  >
+                    {isCopied ? <><Check size={18}/> Copied!</> : <><Share2 size={18}/> Share</>}
+                  </button>
+                )}
+                <button
+                    onClick={onReset}
+                    className="px-4 py-2 bg-pink-600 rounded-lg hover:bg-pink-700 transition-colors"
+                >
+                    {isShareView ? 'Create Your Own' : 'Start Over'}
+                </button>
+             </div>
           )}
         </div>
       </div>

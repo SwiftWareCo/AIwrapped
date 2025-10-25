@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { AnalyticsResult, Platform } from '../types';
 import { analyzeData, parseData } from '../services/dataProcessor';
@@ -36,5 +35,5 @@ export const useAnalytics = () => {
 
   }, []);
 
-  return { analytics, error, isLoading, processFile };
+  return { analytics, error, isLoading, processFile, setAnalytics };
 };

@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useEffect } from 'react';
 import { AnalyticsResult, Platform } from './types';
 import FileUpload from './components/FileUpload';
@@ -9,26 +8,51 @@ import { motion } from 'framer-motion';
 
 const App: React.FC = () => {
   const [platform, setPlatform] = useState<Platform>('ChatGPT');
-  const [fileContent, setFileContent] = useState<string | null>(null);
-  const { analytics, error, isLoading, processFile } = useAnalytics();
+  const [sharedData, setSharedData] = useState<AnalyticsResult | null>(null);
+  const { analytics, error, isLoading, processFile, setAnalytics } = useAnalytics();
 
   useEffect(() => {
+    // Handle mouse move for background gradient
     const handleMouseMove = (e: MouseEvent) => {
       document.body.style.setProperty('--x', `${e.clientX}px`);
       document.body.style.setProperty('--y', `${e.clientY}px`);
     };
     window.addEventListener('mousemove', handleMouseMove);
+
+    // Check for shared data in URL on initial load
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const shareData = urlParams.get('share');
+      if (shareData) {
+        const decodedString = atob(shareData);
+        const parsedData = JSON.parse(decodedString);
+        
+        // Re-hydrate date objects
+        const hydratedData: AnalyticsResult = {
+          ...parsedData,
+          firstChatDate: new Date(parsedData.firstChatDate),
+          lastChatDate: new Date(parsedData.lastChatDate),
+        };
+        setSharedData(hydratedData);
+      }
+    } catch (e) {
+      console.error("Failed to parse shared data from URL:", e);
+      // Silently fail and show the default upload screen
+    }
+
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   const handleFileProcess = useCallback((content: string) => {
-    setFileContent(content);
+    setSharedData(null); // Clear any shared data if a new file is uploaded
     processFile(content, platform);
   }, [platform, processFile]);
 
   const handleReset = () => {
-    setFileContent(null);
-    // analytics are reset inside the hook, but we could clear them here too if needed
+    setSharedData(null);
+    setAnalytics(null);
+    // Clear URL query params
+    window.history.pushState({}, '', window.location.pathname);
   };
   
   const Header: React.FC = () => (
@@ -40,6 +64,9 @@ const App: React.FC = () => {
     </header>
   );
 
+  const currentAnalytics = sharedData || analytics;
+  const isShareView = !!sharedData;
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-4xl mx-auto">
@@ -50,7 +77,7 @@ const App: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: "easeOut" }}
             >
-              {!analytics && !isLoading && (
+              {!currentAnalytics && !isLoading && (
                  <FileUpload
                     platform={platform}
                     setPlatform={setPlatform}
@@ -81,12 +108,12 @@ const App: React.FC = () => {
             </div>
           )}
 
-          {analytics && !isLoading && (
-            <WrappedStory analytics={analytics} onReset={handleReset} />
+          {currentAnalytics && !isLoading && (
+            <WrappedStory analytics={currentAnalytics} onReset={handleReset} isShareView={isShareView} />
           )}
         </main>
       </div>
-      {!analytics && !isLoading && <FAQ />}
+      {!currentAnalytics && !isLoading && <FAQ />}
     </div>
   );
 };
