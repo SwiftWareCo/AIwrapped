@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Platform } from '../types';
 import { Info } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface FileUploadProps {
   platform: Platform;
@@ -110,10 +111,13 @@ const FileUpload: React.FC<FileUploadProps> = ({ platform, setPlatform, onFilePr
   };
 
   return (
-    <div className="w-full max-w-xl mx-auto p-6 bg-gray-800/50 rounded-2xl border border-gray-700 backdrop-blur-sm">
+    <motion.div
+      whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
+      className="w-full max-w-xl mx-auto p-6 bg-gray-800/50 rounded-2xl border border-gray-700 backdrop-blur-sm shadow-lg"
+    >
       <div className="text-center">
         <h2 className="text-2xl font-bold">Upload Your Conversation History</h2>
-        <p className="text-gray-400 mt-2">Don't worry, your data is processed entirely in your browser and is never uploaded to our servers.</p>
+        <p className="text-gray-400 mt-2">Don't worry, your data is processed entirely in your browser and is never uploaded to any servers.</p>
       </div>
 
       <div className="mt-6">
@@ -172,7 +176,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ platform, setPlatform, onFilePr
           </label>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

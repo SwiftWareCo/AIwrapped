@@ -14,10 +14,10 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, description, icon: Ic
   return (
     <motion.div
       key={title}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.5 }}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
       className="text-center p-6 flex flex-col items-center"
     >
       <div className="flex items-center justify-center w-20 h-20 mb-6 bg-purple-900/50 rounded-full border-2 border-purple-500">
@@ -31,8 +31,5 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, description, icon: Ic
     </motion.div>
   );
 };
-
-// You need to install framer-motion: npm install framer-motion
-// You need to install lucide-react: npm install lucide-react
 
 export default StatCard;

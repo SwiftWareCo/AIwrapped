@@ -1,18 +1,22 @@
 import { AnalyticsResult, StoryStep } from '../types';
 import { formatDate } from '../utils/formatters';
-import { generatePersonaDescription } from './geminiService';
+import { generatePersonaDescription, generateTopicSummary } from './geminiService';
 import {
   BarChart,
   Users,
   Clock,
   Calendar,
   Zap,
-  Award,
+  Lightbulb,
   MessageSquare,
   Repeat,
 } from 'lucide-react';
 
 export const generateStory = async (analytics: AnalyticsResult): Promise<StoryStep[]> => {
+  // Start AI-powered content generation in parallel
+  const topicSummaryPromise = generateTopicSummary(analytics.userMessages);
+  const bombasticDescriptionPromise = generatePersonaDescription(analytics.userPersona, analytics.wordFrequency);
+
   const steps: StoryStep[] = [];
 
   // --- Step 1: Intro ---
@@ -55,15 +59,18 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
         icon: Repeat,
       });
   }
-
-  // --- Step 3: User Persona (the simple one) ---
-  steps.push({
-      component: 'StatCard',
-      title: 'Your Persona',
-      value: analytics.userPersona.icon + " " + analytics.userPersona.title,
-      description: analytics.userPersona.description,
-      icon: Award,
-  });
+  
+  // --- New AI Step: Top Topic ---
+  const topicSummary = await topicSummaryPromise;
+  if (topicSummary) {
+      steps.push({
+        component: 'StatCard',
+        title: 'Your Top Topic',
+        value: topicSummary.title,
+        description: topicSummary.insight,
+        icon: Lightbulb,
+      });
+  }
 
   // --- Step 4 & 5: Activity Charts ---
   steps.push({
@@ -100,7 +107,7 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
   }
 
   // --- Final Step: Bombastic Persona Reveal ---
-  const bombasticDescription = await generatePersonaDescription(analytics.userPersona, analytics.wordFrequency);
+  const bombasticDescription = await bombasticDescriptionPromise;
 
   steps.push({
       component: 'PersonaCard',

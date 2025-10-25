@@ -212,5 +212,6 @@ export const analyzeData = (conversations: IConversation[], platform: Platform):
         wordFrequency: getWordFrequency(userMessages),
         userPersona: getUserPersona(userMessages),
         longestStreak: getLongestStreak(allDates),
+        userMessages: userMessages,
     };
 };

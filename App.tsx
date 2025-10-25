@@ -1,14 +1,25 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { AnalyticsResult, Platform } from './types';
 import FileUpload from './components/FileUpload';
 import WrappedStory from './components/WrappedStory';
+import FAQ from './components/FAQ';
 import { useAnalytics } from './hooks/useAnalytics';
+import { motion } from 'framer-motion';
 
 const App: React.FC = () => {
   const [platform, setPlatform] = useState<Platform>('ChatGPT');
   const [fileContent, setFileContent] = useState<string | null>(null);
   const { analytics, error, isLoading, processFile } = useAnalytics();
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      document.body.style.setProperty('--x', `${e.clientX}px`);
+      document.body.style.setProperty('--y', `${e.clientY}px`);
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   const handleFileProcess = useCallback((content: string) => {
     setFileContent(content);
@@ -30,18 +41,24 @@ const App: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-4xl mx-auto">
         <Header />
         <main className="mt-8">
-          {!analytics && !isLoading && (
-             <FileUpload
-                platform={platform}
-                setPlatform={setPlatform}
-                onFileProcess={handleFileProcess}
-                isLoading={isLoading}
-              />
-          )}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+            >
+              {!analytics && !isLoading && (
+                 <FileUpload
+                    platform={platform}
+                    setPlatform={setPlatform}
+                    onFileProcess={handleFileProcess}
+                    isLoading={isLoading}
+                  />
+              )}
+            </motion.div>
           
           {isLoading && (
             <div className="flex flex-col items-center justify-center text-center p-8 bg-gray-800 rounded-lg">
@@ -69,6 +86,7 @@ const App: React.FC = () => {
           )}
         </main>
       </div>
+      {!analytics && !isLoading && <FAQ />}
     </div>
   );
 };

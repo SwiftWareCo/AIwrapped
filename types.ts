@@ -33,6 +33,7 @@ export interface AnalyticsResult {
   wordFrequency: { text: string; value: number }[];
   userPersona: { title: string; description: string; icon: string };
   longestStreak: number;
+  userMessages: IMessage[];
 }
 
 // Interfaces for raw ChatGPT data structure
