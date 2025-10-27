@@ -68,8 +68,36 @@ const App: React.FC = () => {
   const isShareView = !!sharedData;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-4xl mx-auto">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      {/* Glinting light particles - only visible on initial screen */}
+      {!currentAnalytics && !isLoading && (
+        <div className="fixed inset-0 pointer-events-none">
+          {[...Array(8)].map((_, i) => (
+            <motion.div
+              key={`glint-${i}`}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{
+                opacity: [0, 0.8, 0],
+                scale: [0, 1, 0],
+              }}
+              transition={{
+                duration: 2 + Math.random() * 1,
+                delay: i * 0.3,
+                repeat: Infinity,
+                repeatDelay: 1,
+              }}
+              className="absolute w-1 h-1 bg-white rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                boxShadow: '0 0 10px rgba(255, 255, 255, 0.8)',
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      <div className="w-full max-w-4xl mx-auto relative z-10">
         <Header />
         <main className="mt-8">
             <motion.div

@@ -12,9 +12,10 @@ interface PersonaCardProps {
     animation?: string;
     customClass?: string;
   };
+  textClass?: string;
 }
 
-const PersonaCard: React.FC<PersonaCardProps> = ({ title, personaTitle, description, themeStyles }) => {
+const PersonaCard: React.FC<PersonaCardProps> = ({ title, personaTitle, description, themeStyles, textClass }) => {
   return (
     <motion.div
       key={title}
@@ -27,12 +28,12 @@ const PersonaCard: React.FC<PersonaCardProps> = ({ title, personaTitle, descript
       <div className="relative mb-6">
         <Sparkles className="absolute -top-4 -left-4 w-8 h-8 text-yellow-300 animate-pulse" />
         <Sparkles className="absolute -bottom-4 -right-4 w-8 h-8 text-pink-300 animate-pulse delay-300" />
-        <h2 className="text-2xl font-semibold text-gray-300">{title}</h2>
+        <h2 className={`text-2xl font-semibold text-white ${textClass || 'drop-shadow-lg'}`}>{title}</h2>
       </div>
-      <p className="text-5xl md:text-7xl font-black my-4">
+      <p className={`text-5xl md:text-7xl font-black my-4 ${textClass || 'drop-shadow-lg'}`}>
         {personaTitle}
       </p>
-      <p className="text-lg text-gray-300 max-w-md italic mt-4">
+      <p className={`text-lg text-gray-200 max-w-md italic mt-4 font-medium ${textClass || 'drop-shadow-md'}`}>
         "{description}"
       </p>
     </motion.div>

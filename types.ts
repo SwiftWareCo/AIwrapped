@@ -71,6 +71,13 @@ export interface ChatGPTConversation {
 
 // --- Theme Configuration ---
 
+export interface BackgroundEffect {
+  type: 'particles' | 'lines' | 'shapes' | 'wave' | 'grid' | 'sparkles' | 'orbs';
+  color: string;
+  intensity: 'low' | 'medium' | 'high';
+  duration?: number;
+}
+
 export interface ThemeConfig {
   // Gradient background colors
   bgFrom: string;
@@ -81,6 +88,10 @@ export interface ThemeConfig {
   mood: 'bright' | 'energetic' | 'calm' | 'dark' | 'epic';
   // Custom CSS classes if needed
   customClass?: string;
+  // Background effect configuration
+  backgroundEffect?: BackgroundEffect;
+  // Progress bar color
+  progressBarColor?: string;
 }
 
 // --- Story Step Types ---
@@ -114,4 +125,13 @@ export interface PersonaCardStepProps {
   theme?: ThemeConfig;
 }
 
-export type StoryStep = StatCardStepProps | BarChartVizStepProps | PersonaCardStepProps;
+export interface TriviaCardStepProps {
+  component: 'TriviaCard';
+  question: string;
+  options: string[];
+  correctAnswerIndex: number;
+  title: string;
+  theme?: ThemeConfig;
+}
+
+export type StoryStep = StatCardStepProps | BarChartVizStepProps | PersonaCardStepProps | TriviaCardStepProps;

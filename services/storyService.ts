@@ -1,6 +1,7 @@
 import { AnalyticsResult, StoryStep } from '../types';
 import { formatDate } from '../utils/formatters';
 import { generatePersonaDescription, generateTopicSummary } from './geminiService';
+import { generateTriviaQuestion } from './triviaService';
 import {
   BarChart,
   Users,
@@ -32,6 +33,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
       animation: 'glow',
       mood: 'bright',
       customClass: 'shadow-2xl shadow-pink-500/50',
+      backgroundEffect: {
+        type: 'particles',
+        color: 'pink',
+        intensity: 'medium',
+        duration: 4,
+      },
+      progressBarColor: 'bg-pink-500',
     },
   });
 
@@ -48,6 +56,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
       animation: 'shimmer',
       mood: 'energetic',
       customClass: 'shadow-2xl shadow-blue-500/50',
+      backgroundEffect: {
+        type: 'lines',
+        color: 'blue',
+        intensity: 'high',
+        duration: 3,
+      },
+      progressBarColor: 'bg-blue-500',
     },
   });
   
@@ -66,6 +81,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
         animation: 'pulse',
         mood: 'energetic',
         customClass: 'shadow-2xl shadow-orange-500/50',
+        backgroundEffect: {
+          type: 'shapes',
+          color: 'orange',
+          intensity: 'high',
+          duration: 5,
+        },
+        progressBarColor: 'bg-orange-500',
       },
     });
   }
@@ -84,6 +106,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
           animation: 'float',
           mood: 'calm',
           customClass: 'shadow-2xl shadow-teal-500/50',
+          backgroundEffect: {
+            type: 'wave',
+            color: 'teal',
+            intensity: 'medium',
+            duration: 6,
+          },
+          progressBarColor: 'bg-teal-500',
         },
       });
   }
@@ -103,9 +132,40 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
           animation: 'glow',
           mood: 'bright',
           customClass: 'shadow-2xl shadow-yellow-500/50',
+          backgroundEffect: {
+            type: 'orbs',
+            color: 'amber',
+            intensity: 'high',
+            duration: 4,
+          },
+          progressBarColor: 'bg-amber-500',
         },
       });
   }
+
+  // --- Trivia Question Step ---
+  const triviaQuestion = generateTriviaQuestion(analytics);
+  steps.push({
+    component: 'TriviaCard',
+    title: 'Quick Quiz',
+    question: triviaQuestion.question,
+    options: triviaQuestion.options,
+    correctAnswerIndex: triviaQuestion.correctAnswerIndex,
+    theme: {
+      bgFrom: 'from-cyan-600',
+      bgTo: 'to-blue-600',
+      animation: 'pulse',
+      mood: 'bright',
+      customClass: 'shadow-2xl shadow-cyan-500/50',
+      backgroundEffect: {
+        type: 'sparkles',
+        color: 'cyan',
+        intensity: 'high',
+        duration: 3,
+      },
+      progressBarColor: 'bg-cyan-500',
+    },
+  });
 
   // --- Step 4 & 5: Activity Charts ---
   steps.push({
@@ -122,6 +182,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
       animation: 'shimmer',
       mood: 'calm',
       customClass: 'shadow-2xl shadow-indigo-500/50',
+      backgroundEffect: {
+        type: 'grid',
+        color: 'indigo',
+        intensity: 'medium',
+        duration: 5,
+      },
+      progressBarColor: 'bg-indigo-500',
     },
   });
 
@@ -139,6 +206,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
       animation: 'float',
       mood: 'calm',
       customClass: 'shadow-2xl shadow-violet-500/50',
+      backgroundEffect: {
+        type: 'sparkles',
+        color: 'violet',
+        intensity: 'high',
+        duration: 4,
+      },
+      progressBarColor: 'bg-violet-500',
     },
   });
   
@@ -158,6 +232,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
           animation: 'shimmer',
           mood: 'calm',
           customClass: 'shadow-2xl shadow-emerald-500/50',
+          backgroundEffect: {
+            type: 'lines',
+            color: 'emerald',
+            intensity: 'medium',
+            duration: 5,
+          },
+          progressBarColor: 'bg-emerald-500',
         },
     });
   }
@@ -177,6 +258,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
         animation: 'pulse',
         mood: 'epic',
         customClass: 'shadow-2xl shadow-purple-600/50 border-2 border-purple-500',
+        backgroundEffect: {
+          type: 'sparkles',
+          color: 'purple',
+          intensity: 'high',
+          duration: 3,
+        },
+        progressBarColor: 'bg-purple-500',
       },
   });
 

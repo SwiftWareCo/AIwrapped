@@ -13,11 +13,10 @@ interface StatCardProps {
     animation?: string;
     customClass?: string;
   };
+  textClass?: string;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ title, value, description, icon: Icon, themeStyles }) => {
-  const bgGradient = themeStyles?.bgGradient || 'from-purple-400 to-pink-600';
-
+const StatCard: React.FC<StatCardProps> = ({ title, value, description, icon: Icon, themeStyles, textClass }) => {
   return (
     <motion.div
       key={title}
@@ -30,11 +29,11 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, description, icon: Ic
       <div className="flex items-center justify-center w-20 h-20 mb-6 bg-purple-900/50 rounded-full border-2 border-purple-500">
         <Icon className="w-10 h-10 text-purple-300" />
       </div>
-      <h2 className="text-xl font-semibold text-gray-300">{title}</h2>
-      <p className={`text-5xl md:text-7xl font-black my-4 text-transparent bg-clip-text bg-gradient-to-r ${bgGradient}`}>
+      <h2 className={`text-xl font-semibold text-white ${textClass || 'drop-shadow-lg'}`}>{title}</h2>
+      <p className={`text-5xl md:text-7xl font-black my-4 text-white drop-shadow-2xl`}>
         {value}
       </p>
-      <p className="text-md text-gray-400 max-w-md">{description}</p>
+      <p className={`text-md text-gray-300 max-w-md font-medium ${textClass || 'drop-shadow-md'}`}>{description}</p>
     </motion.div>
   );
 };

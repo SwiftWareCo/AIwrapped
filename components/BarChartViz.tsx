@@ -17,6 +17,7 @@ interface BarChartVizProps {
     animation?: string;
     customClass?: string;
   };
+  textClass?: string;
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -30,7 +31,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const BarChartViz: React.FC<BarChartVizProps> = ({ title, data, dataKey, xAxisKey, description, icon: Icon, themeStyles }) => {
+const BarChartViz: React.FC<BarChartVizProps> = ({ title, data, dataKey, xAxisKey, description, icon: Icon, themeStyles, textClass }) => {
   return (
     <motion.div
       key={title}
@@ -42,7 +43,7 @@ const BarChartViz: React.FC<BarChartVizProps> = ({ title, data, dataKey, xAxisKe
     >
       <div className="flex items-center justify-center gap-3 mb-4">
         <Icon className="w-6 h-6 text-purple-300" />
-        <h2 className="text-xl font-semibold text-gray-300">{title}</h2>
+        <h2 className={`text-xl font-semibold text-white ${textClass || 'drop-shadow-lg'}`}>{title}</h2>
       </div>
       <div className="flex-grow w-full h-64 md:h-80">
         <ResponsiveContainer width="100%" height="100%">
@@ -55,7 +56,7 @@ const BarChartViz: React.FC<BarChartVizProps> = ({ title, data, dataKey, xAxisKe
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <p className="text-md text-gray-400 mt-4">{description}</p>
+      <p className={`text-md text-gray-300 mt-4 font-medium ${textClass || 'drop-shadow-md'}`}>{description}</p>
     </motion.div>
   );
 };

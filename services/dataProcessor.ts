@@ -1,5 +1,6 @@
 import { IConversation, Platform, ChatGPTConversation, AnalyticsResult, IMessage, ChatGPTMessageNode } from '../types';
 import { formatHour } from '../utils/formatters';
+import { selectPersona } from './personaService';
 
 // A list of common words to exclude from the word cloud
 const STOP_WORDS = new Set([
@@ -121,19 +122,19 @@ const getWordFrequency = (messages: IMessage[]): { text: string; value: number }
         .map(([text, value]) => ({ text, value }));
 };
 
-const getUserPersona = (userMessages: IMessage[]): { title: string; description: string; icon: string } => {
-    const totalMessages = userMessages.length;
-    if (totalMessages === 0) return { title: 'The Silent Observer', description: "You didn't send any messages!", icon: '🤫' };
-    
-    const avgLength = userMessages.reduce((acc, msg) => acc + (msg.content?.length || 0), 0) / totalMessages;
-    const questionCount = userMessages.filter(m => m.content?.includes('?')).length;
+const getUserPersona = (analytics: AnalyticsResult): { title: string; description: string; icon: string } => {
+    if (analytics.userMessageCount === 0) {
+        return { title: 'The Silent Observer', description: "You didn't send any messages!", icon: '🤫' };
+    }
 
-    if (userMessages.some(m => m.content?.toLowerCase().includes('code') || m.content?.includes('```') || m.content?.includes('python'))) return { title: 'The Coder', description: 'You frequently ask for code snippets, debugging help, and technical explanations.', icon: '💻' };
-    if (avgLength > 500) return { title: 'The Novelist', description: 'Your prompts are detailed and elaborate, often spanning multiple paragraphs to get the perfect answer.', icon: '✍️' };
-    if (questionCount / totalMessages > 0.6) return { title: 'The Inquisitor', description: 'Driven by curiosity, your conversations are a rapid-fire series of questions, always digging deeper.', icon: '🤔' };
-    if (avgLength < 50) return { title: 'The Director', description: 'Short, sweet, and to the point. You know what you want and ask for it with precision.', icon: '🎬' };
-    
-    return { title: 'The Explorer', description: 'Curious and versatile, you explore a wide range of topics with the AI, from the practical to the profound.', icon: '🧭' };
+    // Use the new persona selection logic
+    const persona = selectPersona(analytics);
+
+    return {
+        title: persona.title,
+        description: persona.description,
+        icon: persona.icon,
+    };
 };
 
 const getLongestStreak = (dates: Date[]): number => {
@@ -179,7 +180,7 @@ export const analyzeData = (conversations: IConversation[], platform: Platform):
         const day = date.toLocaleDateString('en-US', { weekday: 'long' });
         const hour = date.getHours();
         const month = date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
-        
+
         dailyCounts[day] = (dailyCounts[day] || 0) + 1;
         hourlyCounts[hour] = (hourlyCounts[hour] || 0) + 1;
         monthlyCounts[month] = (monthlyCounts[month] || 0) + 1;
@@ -195,7 +196,8 @@ export const analyzeData = (conversations: IConversation[], platform: Platform):
         return dateA.getTime() - dateB.getTime();
     });
 
-    return {
+    // Build analytics object without persona first (needed for persona selection)
+    const analyticsWithoutPersona: AnalyticsResult = {
         platform: platform,
         totalConversations: conversations.length,
         totalMessages: allMessages.length,
@@ -210,8 +212,13 @@ export const analyzeData = (conversations: IConversation[], platform: Platform):
         hourlyActivity: Array.from({ length: 24 }, (_, i) => ({ hour: formatHour(i), count: hourlyCounts[i] || 0 })),
         monthlyActivity: sortedMonths.map(month => ({ month, count: monthlyCounts[month] || 0 })),
         wordFrequency: getWordFrequency(userMessages),
-        userPersona: getUserPersona(userMessages),
+        userPersona: { title: 'The Explorer', description: '', icon: '🧭' }, // Placeholder
         longestStreak: getLongestStreak(allDates),
         userMessages: userMessages,
     };
+
+    // Now use the complete analytics to select the persona
+    analyticsWithoutPersona.userPersona = getUserPersona(analyticsWithoutPersona);
+
+    return analyticsWithoutPersona;
 };
