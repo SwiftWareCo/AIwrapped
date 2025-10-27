@@ -215,16 +215,16 @@ const BackgroundEffects: React.FC<{ effect?: BackgroundEffect }> = ({ effect }) 
             return (
               <motion.div
                 key={i}
-                className="absolute text-xs md:text-sm font-mono font-bold opacity-30"
+                className="absolute text-xs md:text-sm font-mono font-bold bg-gray-700/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-gray-600/50 shadow-lg"
                 style={{
-                  color,
+                  color: '#E5E7EB',
                   left: `${startX}%`,
                   top: '-10%',
                 }}
                 animate={{
                   y: ['0vh', '110vh'],
                   rotate: [0, 360],
-                  opacity: [0, intensity * 0.6, intensity * 0.6, 0],
+                  opacity: [0, intensity * 0.9, intensity * 0.9, 0],
                 }}
                 transition={{
                   duration,

@@ -12,10 +12,18 @@ const App: React.FC = () => {
   const { analytics, error, isLoading, processFile, setAnalytics } = useAnalytics();
 
   useEffect(() => {
+    // Throttle function to limit how often the mouse move handler runs
+    let lastRun = 0;
+    const throttleDelay = 50; // Update every 50ms instead of every frame
+
     // Handle mouse move for background gradient
     const handleMouseMove = (e: MouseEvent) => {
-      document.body.style.setProperty('--x', `${e.clientX}px`);
-      document.body.style.setProperty('--y', `${e.clientY}px`);
+      const now = Date.now();
+      if (now - lastRun >= throttleDelay) {
+        document.body.style.setProperty('--x', `${e.clientX}px`);
+        document.body.style.setProperty('--y', `${e.clientY}px`);
+        lastRun = now;
+      }
     };
     window.addEventListener('mousemove', handleMouseMove);
 
