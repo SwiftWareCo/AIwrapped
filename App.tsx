@@ -8,7 +8,6 @@ import { motion } from 'framer-motion';
 
 const App: React.FC = () => {
   const [platform, setPlatform] = useState<Platform>('ChatGPT');
-  const [sharedData, setSharedData] = useState<AnalyticsResult | null>(null);
   const { analytics, error, isLoading, processFile, setAnalytics } =
     useAnalytics();
 
@@ -28,55 +27,18 @@ const App: React.FC = () => {
     };
     window.addEventListener('mousemove', handleMouseMove);
 
-    // Check for shared data in URL on initial load
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const shareData = urlParams.get('share');
-      if (shareData) {
-        // Decode using Unicode-safe method matching the encoding
-        const decodedString = decodeURIComponent(
-          atob(shareData)
-            .split('')
-            .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-            .join('')
-        );
-        const parsedData = JSON.parse(decodedString);
-
-        // Re-hydrate date objects and provide defaults for missing fields
-        const hydratedData: AnalyticsResult = {
-          ...parsedData,
-          firstChatDate: new Date(parsedData.firstChatDate),
-          lastChatDate: new Date(parsedData.lastChatDate),
-          // Provide empty arrays for missing chart data (to keep shared URLs short)
-          dailyActivity: parsedData.dailyActivity || [],
-          hourlyActivity: parsedData.hourlyActivity || [],
-          monthlyActivity: parsedData.monthlyActivity || [],
-          wordFrequency: parsedData.wordFrequency || [],
-          userMessages: [], // Never included in shares
-        };
-        setSharedData(hydratedData);
-      }
-    } catch (e) {
-      console.error('Failed to parse shared data from URL:', e);
-      // Silently fail and show the default upload screen
-    }
-
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   const handleFileProcess = useCallback(
     (content: string) => {
-      setSharedData(null); // Clear any shared data if a new file is uploaded
       processFile(content, platform);
     },
     [platform, processFile]
   );
 
   const handleReset = () => {
-    setSharedData(null);
     setAnalytics(null);
-    // Clear URL query params
-    window.history.pushState({}, '', window.location.pathname);
   };
 
   const Header: React.FC = () => (
@@ -90,13 +52,10 @@ const App: React.FC = () => {
     </header>
   );
 
-  const currentAnalytics = sharedData || analytics;
-  const isShareView = !!sharedData;
-
   return (
     <div className='min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden'>
       {/* Glinting light particles - only visible on initial screen */}
-      {!currentAnalytics && !isLoading && (
+      {!analytics && !isLoading && (
         <div className='fixed inset-0 pointer-events-none'>
           {[...Array(8)].map((_, i) => (
             <motion.div
@@ -131,7 +90,7 @@ const App: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: 'easeOut' }}
           >
-            {!currentAnalytics && !isLoading && (
+            {!analytics && !isLoading && (
               <FileUpload
                 platform={platform}
                 setPlatform={setPlatform}
@@ -168,16 +127,16 @@ const App: React.FC = () => {
             </div>
           )}
 
-          {currentAnalytics && !isLoading && (
+          {analytics && !isLoading && (
             <WrappedStory
-              analytics={currentAnalytics}
+              analytics={analytics}
               onReset={handleReset}
-              isShareView={isShareView}
+              isShareView={false}
             />
           )}
         </main>
       </div>
-      {!currentAnalytics && !isLoading && <FAQ />}
+      {!analytics && !isLoading && <FAQ />}
     </div>
   );
 };
