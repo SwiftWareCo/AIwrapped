@@ -78,7 +78,7 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
       theme: {
         bgFrom: 'from-orange-500',
         bgTo: 'to-red-600',
-        animation: 'pulse',
+        animation: 'glow',
         mood: 'energetic',
         customClass: 'shadow-2xl shadow-orange-500/50',
         backgroundEffect: {
@@ -154,7 +154,7 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
     theme: {
       bgFrom: 'from-cyan-600',
       bgTo: 'to-blue-600',
-      animation: 'pulse',
+      animation: 'shimmer',
       mood: 'bright',
       customClass: 'shadow-2xl shadow-cyan-500/50',
       backgroundEffect: {
@@ -207,9 +207,9 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
       mood: 'calm',
       customClass: 'shadow-2xl shadow-violet-500/50',
       backgroundEffect: {
-        type: 'sparkles',
+        type: 'fallingWords',
         color: 'violet',
-        intensity: 'high',
+        intensity: 'medium',
         duration: 4,
       },
       progressBarColor: 'bg-violet-500',
@@ -249,13 +249,13 @@ export const generateStory = async (analytics: AnalyticsResult): Promise<StorySt
   steps.push({
       component: 'PersonaCard',
       title: "Your AI Personality Is...",
-      personaTitle: `${analytics.userPersona.icon} The ${analytics.userPersona.title} ${analytics.userPersona.icon}`,
+      personaTitle: `${analytics.userPersona.icon} ${analytics.userPersona.title} ${analytics.userPersona.icon}`,
       description: bombasticDescription,
       icon: analytics.userPersona.icon,
       theme: {
         bgFrom: 'from-slate-900',
         bgTo: 'to-slate-800',
-        animation: 'pulse',
+        animation: 'glow',
         mood: 'epic',
         customClass: 'shadow-2xl shadow-purple-600/50 border-2 border-purple-500',
         backgroundEffect: {

@@ -114,22 +114,24 @@ export const generatePersonaDescription = async (
 
     const prompt = `You are a witty and bombastic announcer for an "AI Wrapped" experience. Based on the following user persona and their most used words in AI chats, generate a fun, over-the-top, and flattering personality description. Keep it to 2-3 short, impactful sentences. Be creative and celebratory. Make it UNIQUE and different from generic responses.
 
+IMPORTANT: Do NOT use markdown formatting like ** or __ or any other markdown. Return plain text only.
+
 Generation ID: ${uniqueId} (Timestamp: ${timestamp})
 
-**User Persona:**
+User Persona:
 - Title: "${persona.title}"
 - Base Description: "${persona.description}"
 
-**Their Top Words:**
+Their Top Words:
 - ${topWords}
 
-Now, reveal their grand, bombastic persona! Make it sound epic and totally unique to them.`;
+Now, reveal their grand, bombastic persona! Make it sound epic and totally unique to them. Use plain text without markdown formatting.`;
 
     const response = await callGroqAPI(prompt, false);
     return response.trim();
   } catch (error) {
     console.error("Groq API call failed:", error);
     // Return a creative fallback description on error
-    return `You're the **${persona.title}**! ${persona.description} Your conversations are truly one-of-a-kind, shaping the digital cosmos with every word.`;
+    return `You're ${persona.title}! ${persona.description} Your conversations are truly one-of-a-kind, shaping the digital cosmos with every word.`;
   }
 };

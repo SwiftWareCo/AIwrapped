@@ -26,8 +26,8 @@ const PersonaCard: React.FC<PersonaCardProps> = ({ title, personaTitle, descript
       className={`text-center p-6 flex flex-col items-center bg-gradient-to-br from-purple-900 via-gray-900 to-pink-900 rounded-2xl shadow-2xl border border-purple-500 ${themeStyles?.animation || ''} ${themeStyles?.customClass || ''}`}
     >
       <div className="relative mb-6">
-        <Sparkles className="absolute -top-4 -left-4 w-8 h-8 text-yellow-300 animate-pulse" />
-        <Sparkles className="absolute -bottom-4 -right-4 w-8 h-8 text-pink-300 animate-pulse delay-300" />
+        <Sparkles className="absolute -top-4 -left-4 w-8 h-8 text-yellow-300 animate-bounce" />
+        <Sparkles className="absolute -bottom-4 -right-4 w-8 h-8 text-pink-300 animate-spin" style={{ animationDuration: '3s' }} />
         <h2 className={`text-2xl font-semibold text-white ${textClass || 'drop-shadow-lg'}`}>{title}</h2>
       </div>
       <p className={`text-5xl md:text-7xl font-black my-4 ${textClass || 'drop-shadow-lg'}`}>

@@ -30,31 +30,13 @@ const ExportInstructions: React.FC<{ platform: Platform }> = ({ platform }) => {
     return (
       <div className="mt-4 text-left text-sm text-gray-400 space-y-2 p-4 bg-gray-900/50 rounded-lg">
         <p className="font-semibold text-gray-200">How to get your Claude data:</p>
-        <p>Claude does not have an official "Export All" feature yet. You must manually create a JSON file following this structure:</p>
         <ol className="list-decimal list-inside space-y-1 pl-2">
-            <li>Create a file named <code>claude_conversations.json</code>.</li>
-            <li>For each conversation, copy the content and format it as shown below.</li>
-            <li>Add each conversation object to the main array in the file.</li>
+          <li>Log in to <a href="https://claude.ai" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:underline">claude.ai</a>.</li>
+          <li>Click your profile icon in the bottom-left corner, then go to <strong>Settings</strong>.</li>
+          <li>Select <strong>Privacy</strong>, then click <strong>Export data</strong>.</li>
+          <li>Confirm the export. You'll get an email with a link to download a <code>.zip</code> file.</li>
+          <li>Unzip the file and upload the <strong>conversations.json</strong> file here.</li>
         </ol>
-        <pre className="mt-2 p-2 bg-gray-900 text-xs rounded-md overflow-x-auto">
-          <code>
-{`[
-  {
-    "uuid": "convo-1",
-    "title": "My first conversation",
-    "create_time": "2023-10-27T10:00:00Z",
-    "history": [
-      { "role": "user", "content": "Hello Claude!" },
-      { "role": "assistant", "content": "Hello! How can I help you today?" }
-    ]
-  },
-  {
-    "uuid": "convo-2",
-    ...
-  }
-]`}
-          </code>
-        </pre>
       </div>
     );
   }

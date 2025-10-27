@@ -32,28 +32,33 @@ const BackgroundEffects: React.FC<{ effect?: BackgroundEffect }> = ({ effect }) 
     case 'particles':
       return (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(15)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full blur-2xl"
-              style={{
-                width: `${Math.random() * 80 + 40}px`,
-                height: `${Math.random() * 80 + 40}px`,
-                backgroundColor: color,
-              }}
-              animate={{
-                x: [Math.random() * 100 - 50, Math.random() * 100 - 50],
-                y: [Math.random() * 100 - 50, Math.random() * 100 - 50],
-                opacity: [0, intensity, 0],
-              }}
-              transition={{
-                duration,
-                repeat: Infinity,
-                delay: i * 0.1,
-              }}
-              initial={{ x: Math.random() * 100, y: Math.random() * 100 }}
-            />
-          ))}
+          {[...Array(15)].map((_, i) => {
+            const startX = Math.random() * 100;
+            const startY = Math.random() * 100;
+            return (
+              <motion.div
+                key={i}
+                className="absolute rounded-full blur-2xl"
+                style={{
+                  width: `${Math.random() * 80 + 40}px`,
+                  height: `${Math.random() * 80 + 40}px`,
+                  backgroundColor: color,
+                  left: `${startX}%`,
+                  top: `${startY}%`,
+                }}
+                animate={{
+                  x: [`-${Math.random() * 20}%`, `${Math.random() * 20}%`],
+                  y: [`-${Math.random() * 20}%`, `${Math.random() * 20}%`],
+                  opacity: [0, intensity, 0],
+                }}
+                transition={{
+                  duration,
+                  repeat: Infinity,
+                  delay: i * 0.1,
+                }}
+              />
+            );
+          })}
         </div>
       );
     case 'lines':
@@ -84,32 +89,34 @@ const BackgroundEffects: React.FC<{ effect?: BackgroundEffect }> = ({ effect }) 
     case 'shapes':
       return (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-3xl blur-xl"
-              style={{
-                width: `${Math.random() * 100 + 50}px`,
-                height: `${Math.random() * 100 + 50}px`,
-                backgroundColor: color,
-              }}
-              animate={{
-                rotate: [0, 360],
-                x: [0, Math.random() * 150 - 75],
-                y: [0, Math.random() * 150 - 75],
-                opacity: [0.1, intensity, 0.1],
-              }}
-              transition={{
-                duration: duration + 2,
-                repeat: Infinity,
-                delay: i * 0.2,
-              }}
-              initial={{
-                x: Math.random() * 200 - 100,
-                y: Math.random() * 200 - 100,
-              }}
-            />
-          ))}
+          {[...Array(6)].map((_, i) => {
+            const startX = Math.random() * 100;
+            const startY = Math.random() * 100;
+            return (
+              <motion.div
+                key={i}
+                className="absolute rounded-3xl blur-xl"
+                style={{
+                  width: `${Math.random() * 100 + 50}px`,
+                  height: `${Math.random() * 100 + 50}px`,
+                  backgroundColor: color,
+                  left: `${startX}%`,
+                  top: `${startY}%`,
+                }}
+                animate={{
+                  rotate: [0, 360],
+                  x: [`-${Math.random() * 10}%`, `${Math.random() * 10}%`],
+                  y: [`-${Math.random() * 10}%`, `${Math.random() * 10}%`],
+                  opacity: [0.1, intensity, 0.1],
+                }}
+                transition={{
+                  duration: duration + 2,
+                  repeat: Infinity,
+                  delay: i * 0.2,
+                }}
+              />
+            );
+          })}
         </div>
       );
     case 'wave':
@@ -167,59 +174,102 @@ const BackgroundEffects: React.FC<{ effect?: BackgroundEffect }> = ({ effect }) 
     case 'sparkles':
       return (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(20)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 rounded-full"
-              style={{ backgroundColor: color }}
-              animate={{
-                scale: [0, 1, 0],
-                x: [Math.random() * 400 - 200, Math.random() * 400 - 200],
-                y: [Math.random() * 400 - 200, Math.random() * 400 - 200],
-                opacity: [0, intensity, 0],
-              }}
-              transition={{
-                duration: duration * 0.7,
-                repeat: Infinity,
-                delay: i * 0.05,
-              }}
-              initial={{
-                x: Math.random() * 100,
-                y: Math.random() * 100,
-              }}
-            />
-          ))}
+          {[...Array(20)].map((_, i) => {
+            const startX = Math.random() * 100;
+            const startY = Math.random() * 100;
+            return (
+              <motion.div
+                key={i}
+                className="absolute w-1 h-1 rounded-full"
+                style={{
+                  backgroundColor: color,
+                  left: `${startX}%`,
+                  top: `${startY}%`,
+                }}
+                animate={{
+                  scale: [0, 1, 0],
+                  x: [`-${Math.random() * 10}%`, `${Math.random() * 10}%`],
+                  y: [`-${Math.random() * 10}%`, `${Math.random() * 10}%`],
+                  opacity: [0, intensity, 0],
+                }}
+                transition={{
+                  duration: duration * 0.7,
+                  repeat: Infinity,
+                  delay: i * 0.05,
+                }}
+              />
+            );
+          })}
+        </div>
+      );
+    case 'fallingWords':
+      return (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {[...Array(12)].map((_, i) => {
+            const words = ['code', 'debug', 'create', 'learn', 'think', 'build', 'solve', 'design', 'explore', 'innovate'];
+            const randomWord = words[Math.floor(Math.random() * words.length)];
+            const startX = Math.random() * 100;
+            const delay = i * 0.8;
+            const duration = 8 + Math.random() * 4;
+
+            return (
+              <motion.div
+                key={i}
+                className="absolute text-xs md:text-sm font-mono font-bold opacity-30"
+                style={{
+                  color,
+                  left: `${startX}%`,
+                  top: '-10%',
+                }}
+                animate={{
+                  y: ['0vh', '110vh'],
+                  rotate: [0, 360],
+                  opacity: [0, intensity * 0.6, intensity * 0.6, 0],
+                }}
+                transition={{
+                  duration,
+                  repeat: Infinity,
+                  delay,
+                  ease: 'linear',
+                }}
+              >
+                {randomWord}
+              </motion.div>
+            );
+          })}
         </div>
       );
     case 'orbs':
       return (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(4)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full blur-3xl"
-              style={{
-                width: `${Math.random() * 200 + 100}px`,
-                height: `${Math.random() * 200 + 100}px`,
-                backgroundColor: color,
-              }}
-              animate={{
-                scale: [0.8, 1.2, 0.8],
-                x: [0, Math.random() * 200 - 100],
-                y: [0, Math.random() * 200 - 100],
-                opacity: [intensity * 0.2, intensity, intensity * 0.2],
-              }}
-              transition={{
-                duration,
-                repeat: Infinity,
-                delay: i * 0.3,
-              }}
-              initial={{
-                x: Math.random() * 200 - 100,
-                y: Math.random() * 200 - 100,
-              }}
-            />
-          ))}
+          {[...Array(4)].map((_, i) => {
+            const startX = Math.random() * 100;
+            const startY = Math.random() * 100;
+            return (
+              <motion.div
+                key={i}
+                className="absolute rounded-full blur-3xl"
+                style={{
+                  width: `${Math.random() * 200 + 100}px`,
+                  height: `${Math.random() * 200 + 100}px`,
+                  backgroundColor: color,
+                  left: `${startX}%`,
+                  top: `${startY}%`,
+                }}
+                animate={{
+                  scale: [0.8, 1.2, 0.8],
+                  x: [`-${Math.random() * 15}%`, `${Math.random() * 15}%`],
+                  y: [`-${Math.random() * 15}%`, `${Math.random() * 15}%`],
+                  opacity: [intensity * 0.2, intensity, intensity * 0.2],
+                }}
+                transition={{
+                  duration,
+                  repeat: Infinity,
+                  delay: i * 0.3,
+                }}
+              />
+            );
+          })}
         </div>
       );
     default:
@@ -232,7 +282,6 @@ const getThemeStyles = (theme?: ThemeConfig) => {
   if (!theme) return {};
 
   const animationClasses = {
-    'pulse': 'animate-pulse',
     'glow': 'animate-glow',
     'shimmer': 'animate-shimmer',
     'float': 'animate-float',
@@ -241,7 +290,6 @@ const getThemeStyles = (theme?: ThemeConfig) => {
 
   // Text styling based on animation to ensure readability
   const textStyleClasses = {
-    'pulse': 'drop-shadow-lg', // Pulse needs good contrast
     'glow': 'drop-shadow-xl', // Glow can benefit from stronger shadow
     'shimmer': 'drop-shadow-2xl', // Shimmer is very distracting, needs strongest shadow
     'float': 'drop-shadow-lg', // Float is subtle, normal shadow works
@@ -320,8 +368,14 @@ const WrappedStory: React.FC<WrappedStoryProps> = ({ analytics, onReset, isShare
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight' && step < totalSteps - 1) nextStep();
-      if (e.key === 'ArrowLeft' && step > 0) prevStep();
+      if ((e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') && step < totalSteps - 1) {
+        e.preventDefault();
+        nextStep();
+      }
+      if (e.key === 'ArrowLeft' && step > 0) {
+        e.preventDefault();
+        prevStep();
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -418,14 +472,30 @@ const WrappedStory: React.FC<WrappedStoryProps> = ({ analytics, onReset, isShare
         <BackgroundEffects effect={currentStepData?.theme?.backgroundEffect} />
       </div>
 
-      <motion.div
-        key={`step-${step}`}
-        initial={{ opacity: 0, y: 20, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: -20, scale: 0.95 }}
-        transition={{ duration: 1.2, ease: "easeInOut" }}
-        className={`relative w-full max-w-2xl mx-auto p-4 md:p-8 ${bgClass} rounded-2xl border border-gray-600 backdrop-blur-sm min-h-[500px] flex flex-col justify-between transition-all duration-1000 ${animationClass} ${customClass} overflow-hidden z-10`}
-      >
+      <div className="relative w-full max-w-4xl mx-auto flex items-center gap-4">
+        {/* Left Click Zone */}
+        {step > 0 && (
+          <motion.button
+            whileHover={{ scale: 1.1, x: -5 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={prevStep}
+            className="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-gray-700/80 hover:bg-gray-600 border border-gray-500 transition-all z-20 group"
+            aria-label="Previous"
+          >
+            <svg className="w-6 h-6 text-white group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </motion.button>
+        )}
+
+        <motion.div
+          key={`step-${step}`}
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -20, scale: 0.95 }}
+          transition={{ duration: 1.2, ease: "easeInOut" }}
+          className={`relative w-full max-w-2xl mx-auto p-4 md:p-8 ${bgClass} rounded-2xl border border-gray-600 backdrop-blur-sm min-h-[500px] flex flex-col justify-between transition-all duration-1000 ${animationClass} ${customClass} overflow-hidden z-10`}
+        >
 
         {/* Decorative background shapes */}
         <motion.div
@@ -466,42 +536,92 @@ const WrappedStory: React.FC<WrappedStoryProps> = ({ analytics, onReset, isShare
         </div>
 
         <div className="mt-8 relative z-20">
+          {/* Progress dots */}
+          <div className="flex justify-center gap-1.5 mb-4">
+            {[...Array(totalSteps)].map((_, i) => (
+              <motion.button
+                key={i}
+                onClick={() => setStep(i)}
+                whileHover={{ scale: 1.3 }}
+                whileTap={{ scale: 0.9 }}
+                className={`h-2 rounded-full transition-all ${
+                  i === step
+                    ? 'w-8 bg-purple-500'
+                    : i < step
+                    ? 'w-2 bg-purple-400/50'
+                    : 'w-2 bg-gray-600'
+                }`}
+                aria-label={`Go to step ${i + 1}`}
+              />
+            ))}
+          </div>
+
           <div className="flex justify-between items-center">
-            <button
+            <motion.button
               onClick={prevStep}
               disabled={step === 0}
-              className="px-4 py-2 bg-gray-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600 transition-colors"
+              whileHover={{ scale: 1.05, x: -3 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-5 py-2.5 bg-gray-700 rounded-xl disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-600 transition-all font-semibold flex items-center gap-2 shadow-lg"
             >
-              Prev
-            </button>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Back
+            </motion.button>
             {step < totalSteps - 1 ? (
-               <button
+               <motion.button
                   onClick={nextStep}
-                  className="px-4 py-2 bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors"
+                  whileHover={{ scale: 1.05, x: 3 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all font-semibold flex items-center gap-2 shadow-lg shadow-purple-500/50"
                >
-                  Next
-               </button>
+                  Continue
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+               </motion.button>
             ) : (
                <div className="flex items-center gap-2">
                   {!isShareView && (
-                    <button
+                    <motion.button
                       onClick={handleShare}
-                      className="px-4 py-2 bg-teal-600 rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-5 py-2.5 bg-teal-600 rounded-xl hover:bg-teal-700 transition-all font-semibold flex items-center gap-2 shadow-lg"
                     >
                       {isCopied ? <><Check size={18}/> Copied!</> : <><Share2 size={18}/> Share</>}
-                    </button>
+                    </motion.button>
                   )}
-                  <button
+                  <motion.button
                       onClick={onReset}
-                      className="px-4 py-2 bg-pink-600 rounded-lg hover:bg-pink-700 transition-colors"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-5 py-2.5 bg-gradient-to-r from-pink-600 to-rose-600 rounded-xl hover:from-pink-700 hover:to-rose-700 transition-all font-semibold shadow-lg shadow-pink-500/50"
                   >
                       {isShareView ? 'Create Your Own' : 'Start Over'}
-                  </button>
+                  </motion.button>
                </div>
             )}
           </div>
         </div>
       </motion.div>
+
+      {/* Right Click Zone */}
+      {step < totalSteps - 1 && (
+        <motion.button
+          whileHover={{ scale: 1.1, x: 5 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={nextStep}
+          className="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-gray-700/80 hover:bg-gray-600 border border-gray-500 transition-all z-20 group"
+          aria-label="Next"
+        >
+          <svg className="w-6 h-6 text-white group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </motion.button>
+      )}
+    </div>
     </>
   );
 };

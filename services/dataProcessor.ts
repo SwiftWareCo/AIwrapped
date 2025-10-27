@@ -13,18 +13,43 @@ const STOP_WORDS = new Set([
 const parseClaudeData = (content: string): IConversation[] => {
     try {
         const rawConversations: any[] = JSON.parse(content);
-        return rawConversations.map((convo, index) => ({
-          id: convo.uuid || `claude-${index}`,
-          title: convo.title || 'Untitled Conversation',
-          create_time: convo.create_time ? new Date(convo.create_time).getTime() / 1000 : Date.now() / 1000,
-          messages: convo.history.map((msg: any) => ({
-            author: msg.role === 'user' ? 'user' : 'assistant',
-            content: msg.content,
-            timestamp: new Date(convo.create_time || Date.now()),
-          })),
-        }));
+        return rawConversations
+            .filter(convo => convo.chat_messages && convo.chat_messages.length > 0)
+            .map((convo, index) => {
+                const createTime = convo.created_at ? new Date(convo.created_at).getTime() / 1000 : Date.now() / 1000;
+
+                return {
+                    id: convo.uuid || `claude-${index}`,
+                    title: convo.name || convo.summary || 'Untitled Conversation',
+                    create_time: createTime,
+                    messages: convo.chat_messages
+                        .filter((msg: any) => msg.text || (msg.content && msg.content.length > 0))
+                        .map((msg: any) => {
+                            // Extract text content from the message
+                            let textContent = msg.text || '';
+                            if (!textContent && msg.content && Array.isArray(msg.content)) {
+                                textContent = msg.content
+                                    .filter((c: any) => c.type === 'text' && c.text)
+                                    .map((c: any) => c.text)
+                                    .join(' ')
+                                    .trim();
+                            }
+
+                            const messageTime = msg.created_at ? new Date(msg.created_at) : new Date(convo.created_at || Date.now());
+
+                            return {
+                                author: msg.sender === 'human' ? 'user' : 'assistant',
+                                content: textContent,
+                                timestamp: messageTime,
+                            };
+                        })
+                        .filter((msg: IMessage) => msg.content && msg.content.trim().length > 0),
+                };
+            })
+            .filter(convo => convo.messages.length > 0);
     } catch (e) {
-        throw new Error("Invalid Claude JSON format. Please ensure it's an array of conversation objects.");
+        console.error("Error parsing Claude data:", e);
+        throw new Error("Invalid Claude JSON format. Please ensure you uploaded the conversations.json file from your Claude export.");
     }
 };
 
