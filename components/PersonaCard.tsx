@@ -33,9 +33,11 @@ const PersonaCard: React.FC<PersonaCardProps> = ({ title, personaTitle, descript
       <p className={`text-5xl md:text-7xl font-black my-4 ${textClass || 'drop-shadow-lg'}`}>
         {personaTitle}
       </p>
-      <p className={`text-lg text-gray-200 max-w-md italic mt-4 font-medium ${textClass || 'drop-shadow-md'}`}>
-        "{description}"
-      </p>
+      <div className="max-h-64 overflow-y-auto w-full max-w-md px-2 custom-scrollbar">
+        <p className={`text-lg text-gray-200 italic mt-4 font-medium ${textClass || 'drop-shadow-md'}`}>
+          "{description}"
+        </p>
+      </div>
     </motion.div>
   );
 };

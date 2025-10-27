@@ -351,15 +351,31 @@ const WrappedStory: React.FC<WrappedStoryProps> = ({ analytics, onReset, isShare
   const prevStep = () => setStep(prev => Math.max(prev - 1, 0));
 
   const handleShare = () => {
-    const dataToShare = { ...analytics };
-    // Remove potentially large and sensitive userMessages array before sharing
-    // @ts-ignore
-    delete dataToShare.userMessages;
+    // Only share essential data to keep URL short for Discord/Twitter (2000 char limit)
+    // Removing large arrays to minimize URL size - shared view shows simplified story
+    const dataToShare = {
+      platform: analytics.platform,
+      totalConversations: analytics.totalConversations,
+      totalMessages: analytics.totalMessages,
+      userMessageCount: analytics.userMessageCount,
+      assistantMessageCount: analytics.assistantMessageCount,
+      firstChatDate: analytics.firstChatDate,
+      lastChatDate: analytics.lastChatDate,
+      avgMessagesPerConvo: analytics.avgMessagesPerConvo,
+      busiestDay: analytics.busiestDay,
+      busiestHour: analytics.busiestHour,
+      // Only include top 5 words to minimize size
+      wordFrequency: analytics.wordFrequency?.slice(0, 5) || [],
+      userPersona: analytics.userPersona,
+      longestStreak: analytics.longestStreak,
+    };
 
     const jsonString = JSON.stringify(dataToShare);
-    const base64String = btoa(jsonString);
-    const url = `${window.location.origin}${window.location.pathname}?share=${base64String}`;
-    
+    // Use Unicode-safe encoding by first encoding to URI component, then to base64
+    const encodedString = btoa(encodeURIComponent(jsonString).replace(/%([0-9A-F]{2})/g,
+      (_, p1) => String.fromCharCode(parseInt(p1, 16))));
+    const url = `${window.location.origin}${window.location.pathname}?share=${encodedString}`;
+
     navigator.clipboard.writeText(url).then(() => {
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000); // Reset after 2 seconds
